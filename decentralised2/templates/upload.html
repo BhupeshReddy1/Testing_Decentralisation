@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Upload</title>
+     <!-- Include any necessary CSS files or styles here -->
+
+    <link rel="stylesheet" href="dashboard.css">
+
+</head>
+<body>
+
+<div class="container">
+    <!-- Left Frame with Sidebar -->
+    <div class="left-frame">
+        <div class="sidebar">
+            <!-- Logo with corresponding sidebar heading -->
+            <img src="th.png" alt="Logo 1" class="logo">
+            <h2 class="sidebar-heading">Upload</h2>
+
+            <img src="download.png" alt="Logo 2" class="logo">
+            <h2 class="sidebar-heading">Download</h2>
+
+            <img src="share.png" alt="Logo 3" class="logo">
+            <h2 class="sidebar-heading">Share</h2>
+
+            <img src="change_pass.png" alt="Logo 4" class="logo">
+            <h2 class="sidebar-heading">Change Password</h2>
+
+            <img src="logout.png" alt="Logo 5" class="logo">
+            <h2 class="sidebar-heading">Logout</h2>
+        </div>
+    </div>
+
+    <!-- Right Frame -->
+    <div class="right-frame">
+        <form method="POST" action="/upload" enctype="multipart/form-data">
+    <input type="file" name="file" accept=".txt, .pdf">
+    <input type="text" name="key" placeholder="Encryption Key"> <!-- Input field for encryption key -->
+    <input type="submit" value="Upload File">
+</form>
+
+<h3>Uploaded Files:</h3>
+<ul>
+    {% for encrypted_hash in get_user_encrypted_hashes(session['user_id']) %}
+    <li>
+        <a href="#">{{ encrypted_hash }}</a>
+        <form method="POST" action="{{ url_for('remove') }}" style="display:inline;">
+            <input type="hidden" name="encrypted_hash" value="{{ encrypted_hash }}">
+            <input type="submit" value="Remove">
+        </form>
+    </li>
+    {% endfor %}
+</ul>
+    </div>
+</div>
+<!-- Include any necessary JavaScript files or scripts here -->
+
+</body>
+</html>
