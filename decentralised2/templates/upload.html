@@ -12,6 +12,13 @@
         <input type="text" name="filename" placeholder="Filename">
         <input type="submit" value="Upload">
     </form>
+    <h2>Uploaded Files</h2>
+    <ul>
+        {% for file_info in uploaded_files %}
+            <li>{{ file_info.filename }} - {{ file_info.ipfs_hash }}</li>
+        {% endfor %}
+    </ul>
+
     <a href="{{ url_for('index') }}">Back to Dashboard</a>
 </body>
 </html>
