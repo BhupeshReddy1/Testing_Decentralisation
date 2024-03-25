@@ -99,6 +99,13 @@ def decrypt_ipfs_hash(encrypted_hash, key):
 
 # Function to save encrypted hash in the database
 
+def get_uploaded_files(user_id):
+    db = get_db()
+    cursor = db.cursor()
+    cursor.execute('SELECT file_name, ipfs_hash FROM user_files WHERE user_id = ?', [user_id])
+    results = cursor.fetchall()
+    uploaded_files = [{'filename': row[0], 'ipfs_hash': row[1]} for row in results]
+    return uploaded_files
 
 # Function to retrieve encrypted hashes from the database
 def get_user_encrypted_hashes(user_id):
@@ -186,7 +193,8 @@ def upload():
             return redirect(url_for('upload'))
         else:
             flash('Please select a file and provide a filename.', 'error')
-    return render_template('upload.html')
+    uploaded_files = get_uploaded_files(session['user_id'])
+    return render_template('upload.html',uploaded_files=uploaded_files)
 
 
 """@app.route('/download/<encrypted_hash>')
