@@ -1,0 +1,85 @@
+/* static/css/style5.css */
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #e6f7ff; /* Light blue background color */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.container {
+    max-width: 600px;
+    text-align: center;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    background-color: #ffffff; /* White container background color */
+}
+
+h2 {
+    color: #333;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+li {
+    margin-bottom: 10px;
+}
+
+.success {
+    color: #4caf50; /* Green color for success messages */
+}
+
+.error {
+    color: #f44336; /* Red color for error messages */
+}
+
+a {
+    color: #3498db; /* Blue color for links */
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+form {
+    margin-top: 20px;
+}
+
+input[type="file"] {
+    margin-right: 10px;
+}
+
+input[type="submit"] {
+    padding: 10px;
+    background-color: #3498db;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+input[type="submit"]:hover {
+    background-color: #2980b9;
+}
+
+h3 {
+    margin-top: 20px;
+    color: #333;
+}
+
+ul li a {
+    color: #333;
+}
+
+ul li a:hover {
+    text-decoration: underline;
+}

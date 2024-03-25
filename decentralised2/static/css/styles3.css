@@ -1,0 +1,50 @@
+/* static/styles3.css */
+
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #f0f0f0; /* Background color for the entire page */
+}
+
+h1 {
+    color: #333;
+}
+
+p {
+    margin: 10px 0;
+}
+
+a {
+    color: #4caf50;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* Style for the image container */
+.image-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+/* static/styles3.css */
+
+/* ... (existing styles) */
+
+/* Style for the three images */
+.image-container img {
+    width: 400px; /* Set a fixed width for each image */
+    height: 400px; /* Set a fixed height for each image */
+    margin: 10px; /* Add spacing around each image */
+    border-radius: 8px; /* Add rounded corners to the images */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Add a subtle box shadow */
+}
+
+

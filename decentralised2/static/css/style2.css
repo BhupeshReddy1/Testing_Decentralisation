@@ -1,0 +1,66 @@
+/* static/styles.css */
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #f0f0f0; /* Background color for the entire page */
+}
+
+.login-container {
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 30px; /* Increased padding for the login form */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 350px; /* Increased width for the login form */
+    text-align: center;
+    margin: auto; /* Center the container horizontally */
+    height: 80vh; /* Adjust the height to control the vertical coverage */
+}
+
+.login-container h1 {
+    color: #333;
+}
+
+.login-container img {
+    max-width: 100%; /* Ensure the image doesn't exceed the container width */
+    height: 200px; /* Reduced height for the images */
+    margin-bottom: 20px; /* Add some spacing below the image */
+}
+
+.login-container input {
+    width: 100%;
+    padding: 15px; /* Increased padding for input fields */
+    margin: 10px 0;
+    box-sizing: border-box;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.login-container button {
+    width: 100%;
+    padding: 15px; /* Increased padding for the button */
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.login-container button:hover {
+    background-color: #45a049;
+}
+
+.login-container p {
+    margin: 10px 0;
+}
+
+.login-container a {
+    color: #4caf50;
+}
+
+.login-container a:hover {
+    text-decoration: underline;
+}
