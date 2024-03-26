@@ -7,6 +7,7 @@ from Cryptodome.Cipher import AES
 from Cryptodome.Random import get_random_bytes
 from base64 import b64encode, b64decode
 
+
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your_secret_key'
 app.config['UPLOAD_FOLDER'] = 'uploads'
@@ -29,7 +30,7 @@ def init_db():
                         id INTEGER PRIMARY KEY AUTOINCREMENT,
                         user_id INTEGER,
                         file_name TEXT NOT NULL,
-                        ipfs_hash TEXT NOT NULL,
+                        encrypted_hash TEXT NOT NULL,
                         FOREIGN KEY (user_id) REFERENCES users (id)
                     )
                 ''')
@@ -49,6 +50,13 @@ def query_db(query, args=(), one=False):
     cur.close()
     return (rv[0] if rv else None) if one else rv
 
+def get_uploaded_files(user_id):
+    db = get_db()
+    cursor = db.cursor()
+    cursor.execute('SELECT file_name, encrypted_hash FROM user_files WHERE user_id = ?', [user_id])
+    results = cursor.fetchall()
+    uploaded_files = [{'filename': row[0], 'encrypted_hash': row[1]} for row in results]
+    return uploaded_files
 
 # Initialize the database
 init_db()
@@ -67,9 +75,6 @@ def upload_to_ipfs(file_content):
         return ipfs_hash
     else:
         return None
-
-
-
 
 # Encryption
 def encrypt_ipfs_hash(ipfs_hash, key):
@@ -97,15 +102,24 @@ def decrypt_ipfs_hash(encrypted_hash, key):
     return plaintext.decode()
 
 
+# Function to save file details to the database
+def save_file_to_database(user_id, file_name, encrypted_hash):
+    db = get_db()
+    db.execute('INSERT INTO user_files (user_id, file_name, encrypted_hash) VALUES (?, ?, ?)', [user_id, file_name, encrypted_hash])
+    db.commit()
+
+
+def is_base64_encoded(s):
+    try:
+        # Attempt to decode the string
+        b64decode(s)
+        return True
+    except binascii.Error:
+        return False
+
+
 # Function to save encrypted hash in the database
 
-def get_uploaded_files(user_id):
-    db = get_db()
-    cursor = db.cursor()
-    cursor.execute('SELECT file_name, ipfs_hash FROM user_files WHERE user_id = ?', [user_id])
-    results = cursor.fetchall()
-    uploaded_files = [{'filename': row[0], 'ipfs_hash': row[1]} for row in results]
-    return uploaded_files
 
 # Function to retrieve encrypted hashes from the database
 def get_user_encrypted_hashes(user_id):
@@ -133,10 +147,6 @@ def download_from_ipfs(ipfs_hash):
     else:
         return None"""
 # Function to save file details to the database
-def save_file_to_db(user_id, file_name, ipfs_hash):
-    db = get_db()
-    db.execute('INSERT INTO user_files (user_id, file_name, ipfs_hash) VALUES (?, ?, ?)', [user_id, file_name, ipfs_hash])
-    db.commit()
 
 # Function to upload a file to IPFS
 @app.route('/')
@@ -173,6 +183,7 @@ def upload():
             flash('Please select a file and provide a filename.', 'error')
     return render_template('upload.html')"""
 
+
 @app.route('/upload', methods=['GET', 'POST'])
 def upload():
     if not session.get('logged_in'):
@@ -182,19 +193,41 @@ def upload():
     if request.method == 'POST':
         file = request.files['file']
         filename = request.form['filename']
-        if file and filename:
+        key = request.form['key']
+
+        if file and filename and key:
             file_content = file.read()
             ipfs_hash = upload_to_ipfs(file_content)
+
             if ipfs_hash:
-                save_file_to_db(session['user_id'], filename, ipfs_hash)
+                encrypted_hash = encrypt_ipfs_hash(ipfs_hash, key)
+                save_file_to_database(session['user_id'], filename, encrypted_hash)
                 flash('File uploaded to IPFS successfully', 'success')
             else:
                 flash('Failed to upload the file to IPFS', 'error')
+
             return redirect(url_for('upload'))
+
         else:
-            flash('Please select a file and provide a filename.', 'error')
+            flash('Please select a file, provide a filename, and enter a key.', 'error')
     uploaded_files = get_uploaded_files(session['user_id'])
     return render_template('upload.html',uploaded_files=uploaded_files)
+
+
+@app.route('/decrypt', methods=['POST'])
+def decrypt():
+    if not session.get('logged_in'):
+        flash('Please log in first.', 'error')
+        return redirect(url_for('login'))
+    encrypted_hash = request.form['encrypted_hash']
+    key = request.form['key']
+    key_bytes = key.encode('utf-8')
+    if not encrypted_hash or not key:
+        flash('Encrypted hash or key missing.', 'error')
+        return redirect(url_for('index'))
+    decrypted_hash = decrypt_ipfs_hash(encrypted_hash[1:], key_bytes)
+    flash('Decryption successful', 'success')
+    return render_template('decryption_result.html', decrypted_hash=decrypted_hash)
 
 
 """@app.route('/download/<encrypted_hash>')
