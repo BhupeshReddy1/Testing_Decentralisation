@@ -161,28 +161,6 @@ def index():
     user_id = session['user_id']
     return render_template('index.html', user_id=user_id)
 
-"""@app.route('/upload', methods=['GET', 'POST'])
-def upload():
-    if not session.get('logged_in'):
-        flash('Please log in first.', 'error')
-        return redirect(url_for('login'))
-
-    if request.method == 'POST':
-        file = request.files['file']
-        filename = request.form['filename']
-        if file and filename:
-            file_content = file.read()
-            ipfs_hash = upload_to_ipfs(file_content)
-            if ipfs_hash:
-                save_file_to_db(session['user_id'], filename, ipfs_hash)
-                flash('File uploaded to IPFS successfully', 'success')
-            else:
-                flash('Failed to upload the file to IPFS', 'error')
-            return redirect(url_for('upload'))
-        else:
-            flash('Please select a file and provide a filename.', 'error')
-    return render_template('upload.html')"""
-
 
 @app.route('/upload', methods=['GET', 'POST'])
 def upload():
