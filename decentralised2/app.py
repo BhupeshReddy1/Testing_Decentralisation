@@ -43,6 +43,7 @@ def get_db():
         db = g._database = sqlite3.connect(app.config['DATABASE'])
     return db
 
+
 # Function to query the database
 def query_db(query, args=(), one=False):
     cur = get_db().execute(query, args)
@@ -127,16 +128,6 @@ def get_user_encrypted_hashes(user_id):
     return [result[0] for result in results]
 
 
-"""# Function to remove encrypted hash from the database
-def remove_user_file(user_id, encrypted_hash):
-    db = get_db()
-    cursor = db.cursor()  # Get a cursor for feedback
-    print(f"Executing DELETE query with user_id: {user_id}, encrypted_hash: {encrypted_hash}")
-    cursor.execute('DELETE FROM user_files WHERE user_id = ? AND encrypted_hash = ?', [user_id, encrypted_hash])
-    rows_deleted = cursor.rowcount  # Check rows affected
-    print(f"Rows deleted: {rows_deleted}")
-    db.commit()"""
-
 """# Function to download a file from IPFS
 def download_from_ipfs(ipfs_hash):
     print(f"Fetching IPFS content from: {ipfs_api_url}/cat/{ipfs_hash}")
@@ -148,7 +139,7 @@ def download_from_ipfs(ipfs_hash):
         return None"""
 # Function to save file details to the database
 
-# Function to upload a file to IPFS
+
 @app.route('/')
 def welcome():
     return render_template('welcome.html')
@@ -159,7 +150,32 @@ def index():
         flash('Please log in first.', 'error')
         return redirect(url_for('login'))
     user_id = session['user_id']
-    return render_template('index.html', user_id=user_id)
+    shared_files = query_db('SELECT file_name, encrypted_hash FROM user_files WHERE user_id = ?', [user_id])
+
+    return render_template('index.html', user_id=user_id, shared_files=shared_files)
+
+
+"""@app.route('/upload', methods=['GET', 'POST'])
+def upload():
+    if not session.get('logged_in'):
+        flash('Please log in first.', 'error')
+        return redirect(url_for('login'))
+
+    if request.method == 'POST':
+        file = request.files['file']
+        filename = request.form['filename']
+        if file and filename:
+            file_content = file.read()
+            ipfs_hash = upload_to_ipfs(file_content)
+            if ipfs_hash:
+                save_file_to_db(session['user_id'], filename, ipfs_hash)
+                flash('File uploaded to IPFS successfully', 'success')
+            else:
+                flash('Failed to upload the file to IPFS', 'error')
+            return redirect(url_for('upload'))
+        else:
+            flash('Please select a file and provide a filename.', 'error')
+    return render_template('upload.html')"""
 
 
 @app.route('/upload', methods=['GET', 'POST'])
@@ -208,6 +224,84 @@ def decrypt():
     return render_template('decryption_result.html', decrypted_hash=decrypted_hash)
 
 
+@app.route('/change_password', methods=['GET', 'POST'])
+def change_password():
+    if not session.get('logged_in'):
+        flash('Please log in first.', 'error')
+        return redirect(url_for('login'))
+
+    if request.method == 'POST':
+        current_password = request.form['current_password']
+        new_password = request.form['new_password']
+        confirm_new_password = request.form['confirm_new_password']
+
+        # Retrieve user information from the database
+        user_id = session['user_id']
+        print(f"User ID: {user_id}")
+
+        user = query_db('SELECT * FROM users WHERE id = ?', [user_id], one=True)
+        print(f"User: {user}")
+
+        # Check if the current password matches the one in the database
+        if user and user[2] == current_password:
+            # Check if the new password and confirm new password match
+            if new_password == confirm_new_password:
+                # Update the user's password in the database
+                db = get_db()
+                db.execute('UPDATE users SET password = ? WHERE id = ?', [new_password, user_id])
+                db.commit()
+                flash('Password changed successfully.', 'success')
+                return redirect(url_for('index'))
+            else:
+                flash('New password and confirm new password do not match.', 'error')
+        else:
+            flash('Current password is incorrect.', 'error')
+
+    return render_template('change_password.html')
+
+
+@app.route('/share', methods=['GET', 'POST'])
+def share():
+    if not session.get('logged_in'):
+        flash('Please log in first.', 'error')
+        return redirect(url_for('login'))
+
+    if request.method == 'POST':
+        filename = request.form['filename']
+        username = request.form['username']
+
+        # Query the database to find the file with the matching filename
+        file_entry = query_db('SELECT * FROM user_files WHERE file_name = ?', [filename], one=True)
+
+        if file_entry:
+            # Extract the encrypted hash from the retrieved tuple
+            encrypted_hash = file_entry[3]  # Assuming the encrypted hash is at index 3
+            user_id = query_db('SELECT id FROM users WHERE username = ?', [username], one=True)
+
+            # Check if the user exists
+            if user_id:
+                try:
+                    db = get_db()
+                    # Insert the new file entry with the user_id
+                    db.execute('INSERT INTO user_files (user_id, file_name, encrypted_hash) VALUES (?, ?, ?)',
+                               [user_id[0], filename, encrypted_hash])
+                    db.commit()
+                    flash('File shared successfully.', 'success')
+                    return redirect(url_for('index'))
+                except Exception as e:
+                    flash(f'An error occurred while sharing the file: {str(e)}', 'error')
+                    return redirect(url_for('index'))
+            else:
+                flash('User does not exist.', 'error')
+                return redirect(url_for('index'))
+
+        else:
+            flash('File not found in the database.', 'error')
+            return redirect(url_for('index'))
+
+    return render_template('share.html')
+
+
 """@app.route('/download/<encrypted_hash>')
 def download(encrypted_hash):
     if not session.get('logged_in'):
@@ -238,34 +332,6 @@ def download(encrypted_hash):
         flash('Failed to decrypt the IPFS hash', 'error')
 
     return redirect(url_for('index'))"""
-
-"""
-@app.route('/remove', methods=['POST'])
-def remove():
-    if not session.get('logged_in'):
-        flash('Please log in first.', 'error')
-        return redirect(url_for('login'))
-
-    user_id = session['user_id']
-    encrypted_hash = request.form.get('encrypted_hash', '')
-
-    if not encrypted_hash:
-        flash('Encrypted hash is required', 'error')
-        return redirect(url_for('index'))
-        # Remove the 'b' prefix from the encrypted hash if present
-    if encrypted_hash.startswith("b'"):
-        encrypted_hash = encrypted_hash[2:-1]
-        print(encrypted_hash)
-    encrypted_hash_bytes = encrypted_hash.encode('utf-8')
-    print(f"Attempting to delete file with encrypted_hash: {encrypted_hash}")
-    print(f"User ID: {user_id}")
-    print(f"Current user encrypted hashes: {get_user_encrypted_hashes(user_id)}")
-
-    remove_user_file(user_id, encrypted_hash_bytes)
-
-    print(f"User encrypted hashes after removal: {get_user_encrypted_hashes(user_id)}")
-    flash('File removed successfully', 'success')
-    return redirect(url_for('index'), code=302)"""
 
 
 """@app.route('/decrypt', methods=['POST'])
