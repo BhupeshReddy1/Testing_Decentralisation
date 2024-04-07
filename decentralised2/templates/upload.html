@@ -28,7 +28,7 @@
                 <h2 class="sidebar-heading">Share</h2>
             </a>
 
-            <a href="#">
+            <a href="{{ url_for('change_password') }}">
                 <img src="{{ url_for('static', filename='images/change_pass.png') }}" alt="Logo 4" class="logo">
                 <h2 class="sidebar-heading">Change Password</h2>
             </a>
@@ -43,17 +43,27 @@
     <!-- Right Frame -->
     <div class="right-frame">
         <h1>Upload a File</h1>
+
         <form method="POST" action="{{ url_for('upload') }}" enctype="multipart/form-data">
-            <input type="file" name="file" accept=".pdf, .txt">
-            <input type="text" name="filename" placeholder="Filename">
-            <input type="submit" value="Upload">
-        </form>
-        <h2>Uploaded Files</h2>
-        <ul>
-            {% for file_info in uploaded_files %}
-                <li>{{ file_info.filename }} - {{ file_info.ipfs_hash }}</li>
-            {% endfor %}
-        </ul>
+        <input type="file" name="file" accept=".pdf, .txt">
+        <input type="text" name="filename" placeholder="Filename">
+        <input type="text" name="key" placeholder="Encryption Key"> <!-- Input field for encryption key -->
+        <input type="submit" value="Upload">
+    </form>
+
+    <h2>Uploaded Files</h2>
+    <ul>
+        {% for file_info in uploaded_files %}
+            <li>{{ file_info.filename }} - {{ file_info.encrypted_hash }}</li>
+        {% endfor %}
+    </ul>
+        <h2>Decrypt File</h2>
+    <form method="POST" action="{{ url_for('decrypt') }}">
+        <input type="text" name="encrypted_hash" placeholder="Encrypted Hash">
+        <input type="text" name="key" placeholder="Decryption Key">
+        <input type="submit" value="Decrypt">
+    </form>
+
         <a href="{{ url_for('index') }}">Back to Dashboard</a>
     </div>
 </div>
