@@ -119,8 +119,6 @@ def is_base64_encoded(s):
         return False
 
 
-# Function to save encrypted hash in the database
-
 
 # Function to retrieve encrypted hashes from the database
 def get_user_encrypted_hashes(user_id):
@@ -128,15 +126,6 @@ def get_user_encrypted_hashes(user_id):
     return [result[0] for result in results]
 
 
-"""# Function to download a file from IPFS
-def download_from_ipfs(ipfs_hash):
-    print(f"Fetching IPFS content from: {ipfs_api_url}/cat/{ipfs_hash}")
-    response = requests.get(f"{ipfs_api_url}/cat/{ipfs_hash}")
-    if response.status_code == 200:
-        file_content = response.content
-        return file_content
-    else:
-        return None"""
 # Function to save file details to the database
 
 
@@ -153,29 +142,6 @@ def index():
     shared_files = query_db('SELECT file_name, encrypted_hash FROM user_files WHERE user_id = ?', [user_id])
 
     return render_template('index.html', user_id=user_id, shared_files=shared_files)
-
-
-"""@app.route('/upload', methods=['GET', 'POST'])
-def upload():
-    if not session.get('logged_in'):
-        flash('Please log in first.', 'error')
-        return redirect(url_for('login'))
-
-    if request.method == 'POST':
-        file = request.files['file']
-        filename = request.form['filename']
-        if file and filename:
-            file_content = file.read()
-            ipfs_hash = upload_to_ipfs(file_content)
-            if ipfs_hash:
-                save_file_to_db(session['user_id'], filename, ipfs_hash)
-                flash('File uploaded to IPFS successfully', 'success')
-            else:
-                flash('Failed to upload the file to IPFS', 'error')
-            return redirect(url_for('upload'))
-        else:
-            flash('Please select a file and provide a filename.', 'error')
-    return render_template('upload.html')"""
 
 
 @app.route('/upload', methods=['GET', 'POST'])
@@ -208,20 +174,36 @@ def upload():
     return render_template('upload.html',uploaded_files=uploaded_files)
 
 
+@app.route('/decrypt', methods=['GET'])
+def show_decrypt_form():
+    if not session.get('logged_in'):
+        flash('Please log in first.', 'error')
+        return redirect(url_for('login'))
+    return render_template('decrypt.html')
+
+
 @app.route('/decrypt', methods=['POST'])
 def decrypt():
     if not session.get('logged_in'):
         flash('Please log in first.', 'error')
         return redirect(url_for('login'))
+
     encrypted_hash = request.form['encrypted_hash']
     key = request.form['key']
     key_bytes = key.encode('utf-8')
+    print(encrypted_hash)
+    print(key)
     if not encrypted_hash or not key:
         flash('Encrypted hash or key missing.', 'error')
-        return redirect(url_for('index'))
-    decrypted_hash = decrypt_ipfs_hash(encrypted_hash[1:], key_bytes)
-    flash('Decryption successful', 'success')
-    return render_template('decryption_result.html', decrypted_hash=decrypted_hash)
+        return redirect(url_for('show_decrypt_form'))
+
+    try:
+        decrypted_hash = decrypt_ipfs_hash(encrypted_hash[1:-1], key_bytes)
+        flash('Decryption successful', 'success')
+        return render_template('decryption_result.html', decrypted_hash=decrypted_hash)
+    except Exception as e:
+        print('An error occurred during decryption: {}'.format(str(e)), 'error')
+        return redirect(url_for('show_decrypt_form'))
 
 
 @app.route('/change_password', methods=['GET', 'POST'])
@@ -300,56 +282,6 @@ def share():
             return redirect(url_for('index'))
 
     return render_template('share.html')
-
-
-"""@app.route('/download/<encrypted_hash>')
-def download(encrypted_hash):
-    if not session.get('logged_in'):
-        flash('Please log in first.', 'error')
-        return redirect(url_for('login'))
-
-    user_id = session['user_id']
-    user_encrypted_hashes = get_user_encrypted_hashes(user_id)
-
-    if encrypted_hash not in user_encrypted_hashes:
-        flash('You do not have permission to download this file.', 'error')
-        return redirect(url_for('index'))
-
-    # Decrypt the encrypted hash to get the IPFS hash
-    key = request.args.get('key', '')  # Assuming the key is provided as a query parameter
-    decrypted_ipfs_hash = decrypt_ipfs_hash(encrypted_hash, key)
-
-    if decrypted_ipfs_hash:
-        downloaded_content = download_from_ipfs(decrypted_ipfs_hash)
-
-        if downloaded_content:
-            response = Response(downloaded_content, content_type='application/octet-stream')
-            response.headers['Content-Disposition'] = f'attachment; filename={decrypted_ipfs_hash}.txt'
-            return response
-        else:
-            flash('Failed to download the file from IPFS', 'error')
-    else:
-        flash('Failed to decrypt the IPFS hash', 'error')
-
-    return redirect(url_for('index'))"""
-
-
-"""@app.route('/decrypt', methods=['POST'])
-def decrypt():
-    if not session.get('logged_in'):
-        flash('Please log in first.', 'error')
-        return redirect(url_for('login'))
-
-    encrypted_hash = request.form.get('encrypted_hash')
-    key = request.form.get('key')
-    key_bytes = key.encode('utf-8')
-    if not encrypted_hash or not key:
-        flash('Encrypted hash or key missing.', 'error')
-        return redirect(url_for('index'))
-
-    decrypted_hash = decrypt_ipfs_hash(encrypted_hash[1:], key_bytes)
-    flash('Decryption successful', 'success')
-    return render_template('decryption_result.html', decrypted_hash=decrypted_hash)"""
 
 
 @app.route('/register', methods=['GET', 'POST'])
