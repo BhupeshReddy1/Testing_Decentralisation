@@ -18,7 +18,7 @@
                 <h2 class="sidebar-heading">Upload</h2>
             </a>
 
-            <a href="#">
+            <a href="{{ url_for('decrypt') }}">
                 <img src="{{ url_for('static', filename='images/download.png') }}" alt="Logo 2" class="logo">
                 <h2 class="sidebar-heading">Download</h2>
             </a>
@@ -57,13 +57,7 @@
             <li>{{ file_info.filename }} - {{ file_info.encrypted_hash }}</li>
         {% endfor %}
     </ul>
-        <h2>Decrypt File</h2>
-    <form method="POST" action="{{ url_for('decrypt') }}">
-        <input type="text" name="encrypted_hash" placeholder="Encrypted Hash">
-        <input type="text" name="key" placeholder="Decryption Key">
-        <input type="submit" value="Decrypt">
-    </form>
-
+        
         <a href="{{ url_for('index') }}">Back to Dashboard</a>
     </div>
 </div>
