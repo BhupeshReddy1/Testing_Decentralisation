@@ -6,11 +6,11 @@ body {
     align-items: center;
     height: 100vh;
     margin: 0;
-    background-color: #f0f0f0; /* Background color for the entire page */
+    background-color: #d1c4e9; /* Background color for the entire page */
 }
 
 .login-container {
-    background-color: #fff;
+    background-color: #e0f7fa;
     border-radius: 8px;
     padding: 30px; /* Increased padding for the login form */
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
