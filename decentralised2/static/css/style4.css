@@ -7,7 +7,7 @@ body {
     justify-content: center;
     height: 100vh;
     margin: 0;
-    background-color: #f0f0f0; /* Background color for the entire page */
+    background-color: #C0C0C0; /* Background color for the entire page */
 }
 
 h1 {
@@ -19,6 +19,7 @@ p {
 }
 
 a {
+    text-size: 50px;
     color: #4caf50;
     text-decoration: none;
 }
