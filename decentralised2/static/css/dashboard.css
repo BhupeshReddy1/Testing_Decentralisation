@@ -11,13 +11,13 @@ body, html {
         }
         .left-frame {
             flex: 0 0 200px; /* Fixed width for left frame */
-            background-color: #f0f0f0;
+            background-color: #7ec2aa;
             border-right: 1px solid #ccc;
             overflow-y: auto; /* Enable scrolling if content exceeds frame */
         }
         .right-frame {
             flex: 1; /* Take remaining space */
-            background-color: #fff;
+            background-color: #ffebee;
             overflow: auto; /* Enable scrolling if content exceeds frame */
             padding: 20px; /* Add padding for content */
         }
@@ -44,7 +44,7 @@ body, html {
             display: block;
         }
         .logo {
-            max-width: 80%;
-            height: auto;
-            margin-bottom: 10px; /* Adjust spacing between logos */
-        }
+    max-width: 100%; /* Adjust the percentage to your preference */
+    height: auto; /* Maintain aspect ratio */
+    margin-bottom: 10px; /* Adjust spacing between logos */
+}
