@@ -251,7 +251,7 @@ def share():
     if request.method == 'POST':
         filename = request.form['filename']
         username = request.form['username']
-
+        encrypting=request.form['encryption_hash']
         # Query the database to find the file with the matching filename
         file_entry = query_db('SELECT * FROM user_files WHERE file_name = ?', [filename], one=True)
 
