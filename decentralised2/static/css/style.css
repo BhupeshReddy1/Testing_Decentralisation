@@ -6,12 +6,12 @@ body {
     align-items: center;
     height: 100vh;
     margin: 0;
-    background-color: #e0f7fa; /* Different background color for the entire page */
+    background-color: #F5F5DC; /* Different background color for the entire page */
 }
 
 .registration-container {
     display: flex;
-    background-color: #fff;
+    background-color: #C0C0C0;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     width: 80%; /* Adjust the width of the container */
@@ -28,7 +28,7 @@ body {
     flex: 1; /* Take up 2/3 of the container width */
     padding: 30px; /* Adjust padding as needed */
     text-align: center;
-    background-color: #e0f7fa; /* Match the background color of the entire page */
+    background-color: #; /* Match the background color of the entire page */
 }
 
 .image-container img {
@@ -56,7 +56,7 @@ body {
 }
 
 .registration-form button:hover {
-    background-color: #45a049;
+    background-color: #ffeb3b;
 }
 
 .registration-form p {
