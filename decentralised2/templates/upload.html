@@ -28,6 +28,11 @@
                 <h2 class="sidebar-heading">Share</h2>
             </a>
 
+            <a href="{{ url_for('display_blocks') }}">
+                <img src="{{ url_for('static', filename='images/blocks.png') }}" alt="Logo 6" class="logo">
+                <h2 class="sidebar-heading">Blocks</h2>
+            </a>
+
             <a href="{{ url_for('change_password') }}">
                 <img src="{{ url_for('static', filename='images/change_pass.png') }}" alt="Logo 4" class="logo">
                 <h2 class="sidebar-heading">Change Password</h2>
@@ -42,8 +47,9 @@
 
     <!-- Right Frame -->
     <div class="right-frame">
-        <h1>Upload a File</h1>
 
+        <img src="{{ url_for('static', filename='images/image_name.png') }}" alt="Image Description">
+        <h1>Upload a File</h1>
         <form method="POST" action="{{ url_for('upload') }}" enctype="multipart/form-data">
         <input type="file" name="file" accept=".pdf, .txt">
         <input type="text" name="filename" placeholder="Filename">
@@ -57,7 +63,7 @@
             <li>{{ file_info.filename }} - {{ file_info.encrypted_hash }}</li>
         {% endfor %}
     </ul>
-        
+
         <a href="{{ url_for('index') }}">Back to Dashboard</a>
     </div>
 </div>
