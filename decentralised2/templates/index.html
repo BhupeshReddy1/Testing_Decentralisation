@@ -20,7 +20,7 @@
 
             <a href="{{ url_for('decrypt') }}">
                 <img src="{{ url_for('static', filename='images/download.png') }}" alt="Logo 2" class="logo">
-                <h2 class="sidebar-heading">Download</h2>
+                <h2 class="sidebar-heading">Decrypt</h2>
             </a>
 
             <a href="{{ url_for('share') }}">
@@ -28,7 +28,12 @@
                 <h2 class="sidebar-heading">Share</h2>
             </a>
 
-            <a href="#">
+            <a href="{{ url_for('display_blocks') }}">
+                <img src="{{ url_for('static', filename='images/blocks.png') }}" alt="Logo 6" class="logo">
+                <h2 class="sidebar-heading">Blocks</h2>
+            </a>
+
+            <a href="{{ url_for('change_password') }}">
                 <img src="{{ url_for('static', filename='images/change_pass.png') }}" alt="Logo 4" class="logo">
                 <h2 class="sidebar-heading">Change Password</h2>
             </a>
