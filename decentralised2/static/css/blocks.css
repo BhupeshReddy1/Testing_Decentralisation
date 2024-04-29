@@ -1,0 +1,63 @@
+.container {
+    display: flex;
+    height: 100%;
+}
+
+.left-frame {
+    flex: 0 0 200px; /* Fixed width for left frame */
+    background-color: #7ec2aa;
+    border-right: 1px solid #ccc;
+    overflow-y: auto; /* Enable scrolling if content exceeds frame */
+}
+
+.right-frame {
+    flex: 1; /* Take remaining space */
+    background-color: #ffebee;
+    overflow: auto; /* Enable scrolling if content exceeds frame */
+    padding: 20px; /* Add padding for content */
+}
+
+.blockchain-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.form-container {
+    border: 1px solid #333;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 10px;
+    background-color: #4CAF50; /* Green background color */
+}
+
+.blockchain-content {
+    flex: 1; /* Take remaining space */
+    overflow-y: auto; /* Enable scrolling if content exceeds frame */
+}
+
+.block {
+    display: inline-block;
+    width: 300px; /* Adjust block width */
+    border: 1px solid #333;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 10px 0;
+    background-color: #f0f0f0;
+}
+
+.block .content {
+    height: 60px;  /* Adjust height as needed */
+    overflow-y: auto;  /* Enable vertical scrolling if content exceeds height */
+}
+
+.block p, .block .hash, .block .previous-hash {
+    font-size: 0.8rem; /* Adjust font size as needed */
+}
+
+.hash, .previous-hash {
+    word-wrap: break-word;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;  /* Prevent wrapping within the element */
+}
