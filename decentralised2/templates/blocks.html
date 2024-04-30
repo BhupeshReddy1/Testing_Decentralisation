@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/blocks.css') }}">
+</head>
+<body>
+
+<div class="container">
+    <!-- Left Frame with Sidebar -->
+    <div class="left-frame">
+        <div class="sidebar">
+            <!-- Logo with corresponding sidebar heading -->
+            <a href="{{ url_for('upload') }}">
+                <img src="{{ url_for('static', filename='images/upload.png') }}" alt="Logo 1" class="logo">
+                <h2 class="sidebar-heading">Upload</h2>
+            </a>
+
+            <a href="{{ url_for('decrypt') }}">
+                <img src="{{ url_for('static', filename='images/download.png') }}" alt="Logo 2" class="logo">
+                <h2 class="sidebar-heading">Decrypt</h2>
+            </a>
+
+            <a href="{{ url_for('share') }}">
+                <img src="{{ url_for('static', filename='images/share.png') }}" alt="Logo 3" class="logo">
+                <h2 class="sidebar-heading">Share</h2>
+            </a>
+
+            <a href="{{ url_for('display_blocks') }}">
+                <img src="{{ url_for('static', filename='images/blocks.png') }}" alt="Logo 6" class="logo">
+                <h2 class="sidebar-heading">Blocks</h2>
+            </a>
+
+            <a href="{{ url_for('change_password') }}">
+                <img src="{{ url_for('static', filename='images/change_pass.png') }}" alt="Logo 4" class="logo">
+                <h2 class="sidebar-heading">Change Password</h2>
+            </a>
+
+            <a href="{{ url_for('logout') }}">
+                <img src="{{ url_for('static', filename='images/logout.png') }}" alt="Logo 5" class="logo">
+                <h2 class="sidebar-heading">Logout</h2>
+            </a>
+        </div>
+    </div>
+
+    <!-- Right Frame -->
+    <div class="right-frame">
+         <!-- Blockchain Content -->
+        <div class="blockchain-container">
+            <div class="blockchain-content">
+                <h2>Blockchain:</h2>
+                <div class="block-container">
+                    {% for block in blockchain.chain %}
+                        <div class="block">
+                            <p>Index: {{ block.index }}</p>
+                            <p>Timestamp: {{ block.timestamp }}</p>
+                            <div class="content">
+                                <p class="data">Data: {{ block.data.rstrip('0') }}</p> <!-- Apply CSS class to data paragraph -->
+                                <p class="hash">Hash: {{ block.hash }}</p>
+                                <p class="previous-hash">Previous Hash: {{ block.previous_hash }}</p>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
