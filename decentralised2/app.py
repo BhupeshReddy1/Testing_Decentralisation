@@ -140,12 +140,11 @@ def get_user_encrypted_hashes(user_id):
     return [result[0] for result in results]
 
 
-# Define Block class
 class Block:
     def __init__(self, index, timestamp, data, previous_hash):
         self.index = index
-        self.timestamp = timestamp
-        self.data = data
+        self.timestamp = int(timestamp)  # Convert timestamp to integer
+        self.data = data.decode('utf-8') if isinstance(data, bytes) else data  # Decode bytes to string if necessary
         self.previous_hash = previous_hash
         self.hash = self.calculate_hash()
 
@@ -153,6 +152,7 @@ class Block:
         """Calculates SHA-256 hash of the block."""
         block_string = json.dumps(self.__dict__, sort_keys=True).encode()
         return hashlib.sha256(block_string).hexdigest()
+
 
 
 # Define Blockchain class
