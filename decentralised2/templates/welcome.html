@@ -1,0 +1,20 @@
+<!-- templates/welcome.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style4.css') }}">
+</head>
+<body>
+    <div class="welcome-container">
+        <!-- Add the big picture at the top -->
+        <img src="{{ url_for('static', filename='images/image1.png') }}" alt="Big Picture">
+
+        <h1>Welcome to Decentralized Storage Application</h1>
+        <p>Explore the power of decentralized storage. Login or register to get started!</p>
+        <p><a href="/login">LOGIN</a> or <a href="/register">REGISTER</a></p>
+    </div>
+</body>
+</html>

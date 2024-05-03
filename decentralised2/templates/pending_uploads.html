@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Upload</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+</head>
+<body>
+
+<div class="container">
+    <!-- Left Frame with Sidebar -->
+    <div class="left-frame">
+        <div class="sidebar">
+            <!-- Logo with corresponding sidebar heading -->
+            <a href="{{ url_for('upload') }}">
+                <img src="{{ url_for('static', filename='images/upload.png') }}" alt="Logo 1" class="logo">
+                <h2 class="sidebar-heading">Upload</h2>
+            </a>
+
+            <a href="{{ url_for('decrypt') }}">
+                <img src="{{ url_for('static', filename='images/download.png') }}" alt="Logo 2" class="logo">
+                <h2 class="sidebar-heading">Download</h2>
+            </a>
+
+            <a href="{{ url_for('share') }}">
+                <img src="{{ url_for('static', filename='images/share.png') }}" alt="Logo 3" class="logo">
+                <h2 class="sidebar-heading">Share</h2>
+            </a>
+
+            <a href="{{ url_for('display_blocks') }}">
+                <img src="{{ url_for('static', filename='images/blocks.png') }}" alt="Logo 6" class="logo">
+                <h2 class="sidebar-heading">Blocks</h2>
+            </a>
+
+            <a href="{{ url_for('change_password') }}">
+                <img src="{{ url_for('static', filename='images/change_pass.png') }}" alt="Logo 4" class="logo">
+                <h2 class="sidebar-heading">Change Password</h2>
+            </a>
+
+            <a href="{{ url_for('logout') }}">
+                <img src="{{ url_for('static', filename='images/logout.png') }}" alt="Logo 5" class="logo">
+                <h2 class="sidebar-heading">Logout</h2>
+            </a>
+        </div>
+    </div>
+
+    <!-- Right Frame -->
+    <div class="right-frame">
+
+       <div class="container">
+    <h1>Pending Uploads</h1>
+    <table>
+        <tr>
+            <th> USERNAME</th>
+            <th>File Name</th>
+            <th>Encrypted Hash</th>
+            <th>Action</th>
+        </tr>{% for file in pending_files %}
+<tr>
+    <td> {{ file.username }}</td>
+    <td>{{ file.file_name }}</td>
+    <td>{{ file.encrypted_hash }}</td>
+    <td>
+        <form action="{{ url_for('approve_upload', upload_id=file.id) }}" method="post">
+            <button type="submit">Approve</button>
+        </form>
+    </td>
+    <td>
+        <form action="{{ url_for('reject_upload', upload_id=file.id) }}" method="post">
+            <button type="submit">Reject</button>
+        </form>
+    </td>
+</tr>
+{% endfor %}
+    </table>
+</div>
+    </div>
+</div>
+
+</body>
+</html>
